@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chat Demo</string>
+
+    <!-- Main Activity -->
+    <string name="get_started">Get Started</string>
+
+    <!-- Login Activity -->
+    <string name="login_title">Login to Chat</string>
+    <string name="sdk_app_id">SDK App ID</string>
+    <string name="user_id">User ID</string>
+    <string name="user_sig">User Signature</string>
+    <string name="login">Login</string>
+    <string name="login_success">Login successful!</string>
+    <string name="login_failed">Login failed: %s</string>
+    <string name="please_fill_all_fields">Please fill all fields</string>
+
+    <!-- Conversation List Activity -->
+    <string name="conversations">Conversations</string>
+    <string name="target_user_id">Enter User ID</string>
+    <string name="start_chat">Start Chat</string>
+    <string name="no_conversations">No conversations yet</string>
+    <string name="logout">Logout</string>
+
+    <!-- Chat Activity -->
+    <string name="type_message">Type a message...</string>
+    <string name="send">Send</string>
+    <string name="message_sent_failed">Failed to send message</string>
+    <string name="attach_image">Attach Image</string>
+    <string name="attach_file">Attach File</string>
+    <string name="image_sent_failed">Failed to send image</string>
+    <string name="file_sent_failed">Failed to send file</string>
+    <string name="permission_denied">Permission denied. Please grant storage access.</string>
+</resources>

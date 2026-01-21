@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent">#03DAC5</color>
+    <color name="black">#000000</color>
+    <color name="message_received_bg">#E8E8E8</color>
+    <color name="message_sent_bg">#6200EE</color>
+    <color name="primary">#6200EE</color>
+    <color name="primary_dark">#3700B3</color>
+    <color name="white">#FFFFFF</color>
+    <string name="app_name">Chat Demo</string>
+    <string name="conversations">Conversations</string>
+    <string name="get_started">Get Started</string>
+    <string name="login">Login</string>
+    <string name="login_failed">Login failed: %s</string>
+    <string name="login_success">Login successful!</string>
+    <string name="login_title">Login to Chat</string>
+    <string name="logout">Logout</string>
+    <string name="message_sent_failed">Failed to send message</string>
+    <string name="no_conversations">No conversations yet</string>
+    <string name="please_fill_all_fields">Please fill all fields</string>
+    <string name="sdk_app_id">SDK App ID</string>
+    <string name="send">Send</string>
+    <string name="start_chat">Start Chat</string>
+    <string name="target_user_id">Enter User ID</string>
+    <string name="type_message">Type a message...</string>
+    <string name="user_id">User ID</string>
+    <string name="user_sig">User Signature</string>
+    <style name="Theme.ChatDemo" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+</resources>
