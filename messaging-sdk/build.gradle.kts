@@ -1,20 +1,18 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
 }
 
 android {
-    namespace = "com.example.chatdemo"
+    namespace = "com.example.messaging"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.chatdemo"
         minSdk = 21
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -38,21 +36,11 @@ android {
 }
 
 dependencies {
-    // Messaging SDK Library (includes Tencent IM SDK)
-    implementation(project(":messaging-sdk"))
+    // Tencent IM SDK
+    api("com.tencent.imsdk:imsdk-plus:7.8.5505")
 
     // AndroidX Core
     implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
-
-    // Lifecycle
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-
-    // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

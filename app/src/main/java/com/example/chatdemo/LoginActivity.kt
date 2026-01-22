@@ -7,10 +7,9 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.messaging.MessagingManager
+import com.example.messaging.callbacks.MessageCallback
 import com.google.android.material.textfield.TextInputEditText
-import com.tencent.imsdk.v2.V2TIMCallback
-import com.tencent.imsdk.v2.V2TIMManager
-import com.tencent.imsdk.v2.V2TIMSDKConfig
 import com.tencent.imsdk.v2.V2TIMSDKListener
 
 class LoginActivity : AppCompatActivity() {
@@ -74,37 +73,35 @@ class LoginActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         btnLogin.isEnabled = false
 
-        // Initialize Tencent IM SDK
-        val config = V2TIMSDKConfig()
-        config.logLevel = V2TIMSDKConfig.V2TIM_LOG_DEBUG
-
-        val initSuccess = V2TIMManager.getInstance().initSDK(
-            this,
-            sdkAppId,
-            config,
-            object : V2TIMSDKListener() {
-                override fun onConnecting() {
-                    runOnUiThread {
-                        Toast.makeText(this@LoginActivity, "Connecting...", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-                override fun onConnectSuccess() {
-                    runOnUiThread {
-                        Toast.makeText(this@LoginActivity, "Connected", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-                override fun onConnectFailed(code: Int, error: String?) {
-                    runOnUiThread {
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "Connection failed: $error",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+        // Initialize Messaging SDK
+        val sdkListener = object : V2TIMSDKListener() {
+            override fun onConnecting() {
+                runOnUiThread {
+                    Toast.makeText(this@LoginActivity, "Connecting...", Toast.LENGTH_SHORT).show()
                 }
             }
+
+            override fun onConnectSuccess() {
+                runOnUiThread {
+                    Toast.makeText(this@LoginActivity, "Connected", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onConnectFailed(code: Int, error: String?) {
+                runOnUiThread {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Connection failed: $error",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
+        val initSuccess = MessagingManager.initialize(
+            context = applicationContext,
+            sdkAppId = sdkAppId,
+            listener = sdkListener
         )
 
         if (!initSuccess) {
@@ -114,9 +111,9 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        // Login to Tencent IM
-        V2TIMManager.getInstance().login(userId, userSig, object : V2TIMCallback {
-            override fun onSuccess() {
+        // Login using Messaging SDK
+        MessagingManager.login(userId, userSig, object : MessageCallback {
+            override fun onSuccess(messageId: String?) {
                 runOnUiThread {
                     progressBar.visibility = View.GONE
                     btnLogin.isEnabled = true
@@ -130,13 +127,13 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onError(code: Int, desc: String?) {
+            override fun onError(code: Int, message: String?) {
                 runOnUiThread {
                     progressBar.visibility = View.GONE
                     btnLogin.isEnabled = true
                     Toast.makeText(
                         this@LoginActivity,
-                        getString(R.string.login_failed, desc),
+                        getString(R.string.login_failed, message),
                         Toast.LENGTH_SHORT
                     ).show()
                 }

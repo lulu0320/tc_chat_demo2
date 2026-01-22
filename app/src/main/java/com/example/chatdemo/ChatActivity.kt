@@ -17,6 +17,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatdemo.adapters.MessageAdapter
+import com.example.messaging.MessagingManager
+import com.example.messaging.callbacks.MessageCallback
 import com.google.android.material.appbar.MaterialToolbar
 import com.tencent.imsdk.v2.*
 
@@ -179,42 +181,30 @@ class ChatActivity : AppCompatActivity() {
 
     private fun sendMessage(text: String) {
         targetUserId?.let { userId ->
-            val message = V2TIMManager.getMessageManager().createTextMessage(text)
-
-            V2TIMManager.getMessageManager().sendMessage(
-                message,
-                userId,
-                null,
-                V2TIMMessage.V2TIM_PRIORITY_NORMAL,
-                false,
-                null,
-                object : V2TIMSendCallback<V2TIMMessage> {
-                    override fun onProgress(progress: Int) {
-                        // Not needed for text messages
-                    }
-
-                    override fun onSuccess(msg: V2TIMMessage?) {
-                        runOnUiThread {
-                            etMessage.text.clear()
-                            msg?.let {
-                                messages.add(it)
-                                messageAdapter.notifyItemInserted(messages.size - 1)
-                                recyclerView.scrollToPosition(messages.size - 1)
-                            }
-                        }
-                    }
-
-                    override fun onError(code: Int, desc: String?) {
-                        runOnUiThread {
-                            Toast.makeText(
-                                this@ChatActivity,
-                                getString(R.string.message_sent_failed),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+            // Using MessagingManager library to send text message
+            MessagingManager.sendTextMessage(userId, text, object : MessageCallback {
+                override fun onSuccess(messageId: String?) {
+                    runOnUiThread {
+                        etMessage.text.clear()
+                        // Reload messages to show the sent message
+                        loadMessageHistory()
                     }
                 }
-            )
+
+                override fun onError(code: Int, message: String?) {
+                    runOnUiThread {
+                        Toast.makeText(
+                            this@ChatActivity,
+                            getString(R.string.message_sent_failed),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onProgress(progress: Int) {
+                    // Can show progress if needed
+                }
+            })
         }
     }
 
@@ -223,41 +213,29 @@ class ChatActivity : AppCompatActivity() {
             // Get real file path from URI
             val filePath = getRealPathFromURI(uri) ?: return
 
-            val message = V2TIMManager.getMessageManager().createImageMessage(filePath)
-
-            V2TIMManager.getMessageManager().sendMessage(
-                message,
-                userId,
-                null,
-                V2TIMMessage.V2TIM_PRIORITY_NORMAL,
-                false,
-                null,
-                object : V2TIMSendCallback<V2TIMMessage> {
-                    override fun onProgress(progress: Int) {
-                        // Can show upload progress if needed
-                    }
-
-                    override fun onSuccess(msg: V2TIMMessage?) {
-                        runOnUiThread {
-                            msg?.let {
-                                messages.add(it)
-                                messageAdapter.notifyItemInserted(messages.size - 1)
-                                recyclerView.scrollToPosition(messages.size - 1)
-                            }
-                        }
-                    }
-
-                    override fun onError(code: Int, desc: String?) {
-                        runOnUiThread {
-                            Toast.makeText(
-                                this@ChatActivity,
-                                getString(R.string.image_sent_failed),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+            // Using MessagingManager library to send image
+            MessagingManager.sendImageMessage(userId, filePath, object : MessageCallback {
+                override fun onSuccess(messageId: String?) {
+                    runOnUiThread {
+                        // Reload messages to show the sent image
+                        loadMessageHistory()
                     }
                 }
-            )
+
+                override fun onError(code: Int, message: String?) {
+                    runOnUiThread {
+                        Toast.makeText(
+                            this@ChatActivity,
+                            getString(R.string.image_sent_failed),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onProgress(progress: Int) {
+                    // Can show upload progress if needed
+                }
+            })
         }
     }
 
@@ -266,41 +244,29 @@ class ChatActivity : AppCompatActivity() {
             // Get real file path from URI
             val filePath = getRealPathFromURI(uri) ?: return
 
-            val message = V2TIMManager.getMessageManager().createFileMessage(filePath, "")
-
-            V2TIMManager.getMessageManager().sendMessage(
-                message,
-                userId,
-                null,
-                V2TIMMessage.V2TIM_PRIORITY_NORMAL,
-                false,
-                null,
-                object : V2TIMSendCallback<V2TIMMessage> {
-                    override fun onProgress(progress: Int) {
-                        // Can show upload progress if needed
-                    }
-
-                    override fun onSuccess(msg: V2TIMMessage?) {
-                        runOnUiThread {
-                            msg?.let {
-                                messages.add(it)
-                                messageAdapter.notifyItemInserted(messages.size - 1)
-                                recyclerView.scrollToPosition(messages.size - 1)
-                            }
-                        }
-                    }
-
-                    override fun onError(code: Int, desc: String?) {
-                        runOnUiThread {
-                            Toast.makeText(
-                                this@ChatActivity,
-                                getString(R.string.file_sent_failed),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+            // Using MessagingManager library to send file
+            MessagingManager.sendFileMessage(userId, filePath, "", object : MessageCallback {
+                override fun onSuccess(messageId: String?) {
+                    runOnUiThread {
+                        // Reload messages to show the sent file
+                        loadMessageHistory()
                     }
                 }
-            )
+
+                override fun onError(code: Int, message: String?) {
+                    runOnUiThread {
+                        Toast.makeText(
+                            this@ChatActivity,
+                            getString(R.string.file_sent_failed),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onProgress(progress: Int) {
+                    // Can show upload progress if needed
+                }
+            })
         }
     }
 

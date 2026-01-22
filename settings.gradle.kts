@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ChatDemo"
 include(":app")
+include(":messaging-sdk")
